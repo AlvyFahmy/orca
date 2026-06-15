@@ -5,28 +5,231 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT ORCA Pasifik Indonesia</title>
     <style>
-        /* Menghilangkan margin bawaan browser */
+        /* Reset & Base Style */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Mencegah double scrollbar */
-            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
         }
 
-        /* Membuat iframe memenuhi seluruh layar bodi */
+        /* Container Aplikasi (Iframe & Logout) */
+        #appContainer {
+            display: none; /* Sembunyikan aplikasi sebelum login */
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
             display: block;
         }
+
+        /* Tombol Floating Logout */
+        .btn-logout {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background 0.3s, transform 0.2s;
+            z-index: 9999;
+        }
+        .btn-logout:hover {
+            background-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        /* Form Login Wrapper */
+        #loginBox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+        }
+
+        .login-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            margin-bottom: 5px;
+            color: #1e3a8a;
+        }
+
+        .login-card p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #1d4ed8;
+        }
+
+        #errorMessage {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <iframe src="https://script.google.com/macros/s/AKfycbx7s-iVx8vd3s39PQIVjydnvdVb2WEVD-VOeHLwm1E9wwYHpukoZRkrp2-vsPqsbsoI/exec" allowfullscreen></iframe>
+    <div id="loginBox">
+        <div class="login-card">
+            <h2>PT ORCA Pasifik Indonesia</h2>
+            <p>Silakan masuk untuk mengakses sistem</p>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn-login">Masuk</button>
+                <div id="errorMessage">Username atau Password salah!</div>
+            </form>
+        </div>
+    </div>
 
+    <div id="appContainer">
+        <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        <div id="iframePlaceHolder"></div>
+    </div>
+
+    <script>
+        // Kredensial yang sudah diamankan dengan SHA-256 Hash
+        // user: "orcapasifikindonesia"
+        const TARGET_USER_HASH = "bf676db6f9b69b6140409fe6df308a0dfdfd6da57bcfbc0756771efcf60bd87a";
+        // pass: "Orca#2026"
+        const TARGET_PASS_HASH = "6f5f3fe85706509f69b82bf4753556d4778beeb2e4f0ba61cc7df947704df39c";
+        
+        // URL Google Apps Script milikmu
+        const APP_URL = "https://script.google.com/macros/s/AKfycbx7s-iVx8vd3s39PQIVjydnvdVb2WEVD-VOeHLwm1E9wwYHpukoZRkrp2-vsPqsbsoI/exec";
+
+        // Fungsi pembantu untuk mengubah teks menjadi SHA-256 Hash
+        async function sha256(string) {
+            const utf8 = new TextEncoder().encode(string);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Cek status login saat halaman dimuat
+        window.onload = function() {
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
+                showApp();
+            }
+        };
+
+        // Handle Proses Login
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const userInp = document.getElementById("username").value;
+            const passInp = document.getElementById("password").value;
+            const errorMsg = document.getElementById("errorMessage");
+
+            // Mengubah input user menjadi hash
+            const inputUserHash = await sha256(userInp);
+            const inputPassHash = await sha256(passInp);
+
+            // Validasi kecocokan Hash
+            if (inputUserHash === TARGET_USER_HASH && inputPassHash === TARGET_PASS_HASH) {
+                sessionStorage.setItem("isLoggedIn", "true");
+                errorMsg.style.display = "none";
+                showApp();
+            } else {
+                errorMsg.style.display = "block";
+                document.getElementById("password").value = "";
+            }
+        }
+
+        // Tampilkan Aplikasi & Inject Iframe
+        function showApp() {
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("appContainer").style.display = "block";
+            
+            // Menginjeksi iframe secara dinamis agar URL target tidak ketahuan sebelum login
+            const placeholder = document.getElementById("iframePlaceHolder");
+            if(!placeholder.innerHTML) {
+                placeholder.innerHTML = `<iframe src="${APP_URL}" allowfullscreen></iframe>`;
+            }
+        }
+
+        // Handle Proses Logout
+        function handleLogout() {
+            sessionStorage.removeItem("isLoggedIn");
+            // Reload halaman untuk membersihkan sisa memori iframe & mengembalikan ke form login
+            window.location.reload();
+        }
+    </script>
 </body>
 </html>

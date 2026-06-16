@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Harga Jual - PT Orca Pasifik Indonesia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #0f2c59;
+            --primary-dark: #071935;
+            --accent: #c9a84c;
+            --bg-light: #f4f6fa;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .calc-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15, 44, 89, 0.1);
+            background: #ffffff;
+            overflow: hidden;
+        }
+        .calc-header {
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 24px;
+        }
+        .result-box {
+            background-color: #f8fdfa;
+            border: 1.5px solid #d1ebd9;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+        .terbilang-box {
+            background-color: #f4f6fa;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 12px 15px;
+            font-size: 13px;
+            color: #444;
+            font-style: italic;
+            line-height: 1.5;
+        }
+        .formula-badge {
+            background-color: #eef2f7;
+            color: #444;
+            font-size: 11px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        .btn-copy {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            
+            <div id="loginSection" class="card calc-card shadow animate__animated animate__fadeIn">
+                <div class="calc-header text-center">
+                    <h5 class="fw-bold mb-1"><i class="fa-solid fa-lock me-2 text-warning"></i>Kalkulator Terproteksi</h5>
+                    <span class="small opacity-75">PT Orca Pasifik Indonesia</span>
+                </div>
+                <div class="card-body p-4">
+                    <div id="loginAlert" class="alert alert-danger d-none small py-2" role="alert">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> Username atau Password salah!
+                    </div>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-secondary">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" id="loginUsername" class="form-control form-control-sm" required placeholder="Masukkan username">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-secondary">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-key"></i></span>
+                                <input type="password" id="loginPassword" class="form-control form-control-sm" required placeholder="Masukkan password">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn w-100 text-white fw-bold py-2" style="background-color: var(--primary);">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i> Masuk Aplikasi
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer bg-light text-center py-3 text-muted small border-0">
+                    Sistem Otentikasi Resmi &copy; 2026
+                </div>
+            </div>
+
+            <div id="calculatorSection" class="card calc-card shadow d-none">
+                <div class="calc-header text-center position-relative">
+                    <h5 class="fw-bold mb-1"><i class="fa-solid fa-calculator me-2 text-warning"></i>Kalkulator Harga Jual</h5>
+                    <span class="small opacity-75">PT Orca Pasifik Indonesia</span>
+                    <button class="btn btn-sm btn-link text-white position-absolute end-0 top-50 translate-middle-y me-3 opacity-75 text-decoration-none" onclick="handleLogout()" title="Keluar">
+                        <i class="fa-solid fa-power-off fs-5"></i>
+                    </button>
+                </div>
+                
+                <div class="card-body p-4">
+                    
+                    <div class="mb-4 text-center">
+                        <span class="text-muted d-block small mb-2 fw-medium">Rumus Konversi Acuan:</span>
+                        <div class="formula-badge">
+                            Harga Jual = Distributor / 0.5 / 0.925 / 1
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="calc_hargaDist" class="form-label fw-semibold small text-secondary">Masukkan Harga Distributor (Rp)</label>
+                        <div class="input-group input-group-lg shadow-sm rounded">
+                            <span class="input-group-text bg-light text-muted fw-bold border-end-0" style="font-size: 16px;">Rp</span>
+                            <input type="text" id="calc_hargaDist" class="form-control fw-bold text-dark border-start-0" placeholder="0" oninput="formatDanHitung(this)">
+                        </div>
+                    </div>
+                    
+                    <hr class="text-muted opacity-25 my-4">
+                    
+                    <div class="result-box shadow-sm mb-4">
+                        <span class="text-success small fw-bold d-block mb-1 text-uppercase tracking-wider">
+                            <i class="fa-solid fa-tags me-1"></i>Rekomendasi Harga Jual
+                        </span>
+                        <h2 id="calc_hargaJualTeks" class="fw-bold text-success m-0 mb-2" style="font-size: 28px;">Rp 0</h2>
+                        
+                        <button type="button" id="btnCopy" class="btn btn-sm btn-outline-success btn-copy" onclick="salinKeClipboard()" disabled>
+                            <i class="fa-solid fa-copy me-1"></i> Salin Angka
+                        </button>
+                        
+                        <div class="pt-2 border-top border-success border-opacity-10 row g-0 small text-muted" style="font-size: 11.5px;">
+                            <div class="col-7">Faktor Pembagi Efektif:</div>
+                            <div class="col-5 text-end fw-semibold font-monospace">0.4625</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="text-secondary small fw-bold text-uppercase d-block mb-1">
+                            <i class="fa-solid fa-comment-dots me-1 text-muted"></i> Format Teks Terbilang Resmi:
+                        </span>
+                        <div id="calc_terbilangTeks" class="terbilang-box">
+                            Silakan masukkan nominal harga distributor di atas...
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="card-footer bg-light text-center py-3 text-muted small border-0">
+                    Sistem Manajemen Penawaran Resmi &copy; 2026
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    var nilaiMentahHargaJual = 0;
+
+    // Cek status login ketika halaman dimuat
+    window.addEventListener('DOMContentLoaded', (event) => {
+        var statusLogin = sessionStorage.getItem('orca_calc_auth');
+        if (statusLogin === 'true') {
+            tampilkanKalkulator();
+        }
+    });
+
+    // Fungsi Validasi Login
+    function handleLogin(e) {
+        e.preventDefault();
+        var userIn = document.getElementById('loginUsername').value.trim();
+        var passIn = document.getElementById('loginPassword').value;
+        var alertBox = document.getElementById('loginAlert');
+
+        // Kredensial sesuai instruksi
+        if (userIn === 'orcapasifikindonesia' && passIn === 'orca#2026') {
+            sessionStorage.setItem('orca_calc_auth', 'true');
+            alertBox.classList.add('d-none');
+            tampilkanKalkulator();
+        } else {
+            alertBox.classList.remove('d-none');
+            document.getElementById('loginPassword').value = '';
+        }
+    }
+
+    // Fungsi Logout
+    function handleLogout() {
+        sessionStorage.removeItem('orca_calc_auth');
+        window.location.reload();
+    }
+
+    // Fungsi Toggle View
+    function tampilkanKalkulator() {
+        document.getElementById('loginSection').classList.add('d-none');
+        document.getElementById('calculatorSection').classList.remove('d-none');
+        document.getElementById('calc_hargaDist').focus();
+    }
+
+    // Fungsi Utama Format & Komputasi Hitung
+    function formatDanHitung(input) {
+        var angkaMurni = input.value.replace(/[^0-9]/g, '');
+        
+        if (angkaMurni === '' || parseInt(angkaMurni) === 0) {
+            input.value = '';
+            document.getElementById('calc_hargaJualTeks').innerText = "Rp 0";
+            document.getElementById('calc_terbilangTeks').innerHTML = "Silakan masukkan nominal harga distributor di atas...";
+            nilaiMentahHargaJual = 0;
+            document.getElementById('btnCopy').disabled = true;
+            return;
+        }
+
+        input.value = parseInt(angkaMurni).toLocaleString('id-ID');
+
+        var hargaDist = parseFloat(angkaMurni);
+        var textOutput = document.getElementById('calc_hargaJualTeks');
+        var terbilangOutput = document.getElementById('calc_terbilangTeks');
+        var btnCopy = document.getElementById('btnCopy');
+        
+        var kalkulasi = hargaDist / 0.5 / 0.925 / 1;
+        nilaiMentahHargaJual = Math.round(kalkulasi);
+        
+        textOutput.innerText = "Rp " + nilaiMentahHargaJual.toLocaleString('id-ID');
+        btnCopy.disabled = false;
+        
+        var teksTerbilang = konversiAngkaKeTeks(nilaiMentahHargaJual) + " Rupiah";
+        terbilangOutput.innerHTML = "<strong>Terbilang:</strong> " + teksTerbilang;
+        
+        btnCopy.innerHTML = '<i class="fa-solid fa-copy me-1"></i> Salin Angka';
+        btnCopy.className = "btn btn-sm btn-outline-success btn-copy";
+    }
+
+    // ALGORITMA KONVERSI ANGKA TERBILANG (REKURSIF)
+    function konversiAngkaKeTeks(nilai) {
+        var bilangan = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+        var hasilTeks = "";
+
+        if (nilai < 12) {
+            hasilTeks = " " + bilangan[nilai];
+        } else if (nilai < 20) {
+            hasilTeks = konversiAngkaKeTeks(nilai - 10) + " Belas ";
+        } else if (nilai < 100) {
+            hasilTeks = konversiAngkaKeTeks(Math.floor(nilai / 10)) + " Puluh " + konversiAngkaKeTeks(nilai % 10);
+        } else if (nilai < 200) {
+            hasilTeks = " Seratus " + konversiAngkaKeTeks(nilai - 100);
+        } else if (nilai < 1000) {
+            hasilTeks = konversiAngkaKeTeks(Math.floor(nilai / 100)) + " Ratus " + konversiAngkaKeTeks(nilai % 100);
+        } else if (nilai < 2000) {
+            hasilTeks = " Seribu " + konversiAngkaKeTeks(nilai - 1000);
+        } else if (nilai < 1000000) {
+            hasilTeks = konversiAngkaKeTeks(Math.floor(nilai / 1000)) + " Ribu " + konversiAngkaKeTeks(nilai % 1000);
+        } else if (nilai < 1000000000) {
+            hasilTeks = konversiAngkaKeTeks(Math.floor(nilai / 1000000)) + " Juta " + konversiAngkaKeTeks(nilai % 1000000);
+        } else if (nilai < 1000000000000) {
+            hasilTeks = konversiAngkaKeTeks(Math.floor(nilai / 1000000000)) + " Miliar " + konversiAngkaKeTeks(nilai % 1000000000);
+        } else if (nilai < 1000000000000000) {
+            hasilTeks = konversiAngkaKeTeks(Math.floor(nilai / 1000000000000)) + " Triliun " + konversiAngkaKeTeks(nilai % 1000000000000);
+        }
+
+        return hasilTeks.replace(/\s+/g, ' ').trim();
+    }
+
+    function salinKeClipboard() {
+        if (nilaiMentahHargaJual <= 0) return;
+        var btnCopy = document.getElementById('btnCopy');
+        
+        navigator.clipboard.writeText(nilaiMentahHargaJual).then(function() {
+            btnCopy.innerHTML = '<i class="fa-solid fa-check me-1"></i> Tersalin!';
+            btnCopy.className = "btn btn-sm btn-success btn-copy text-white";
+        }).catch(function(err) {
+            alert('Gagal menyalin otomatis.');
+        });
+    }
+</script>
+
+</body>
+</html>

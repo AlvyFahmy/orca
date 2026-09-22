@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartu Nama Digital - Felmi Firmansyah Saputra</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 24px;
+            padding: 32px 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative Background Glow Tipis */
+        .card-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(220, 38, 38, 0.1));
+            filter: blur(50px);
+            z-index: 0;
+            opacity: 0.8;
+        }
+
+        .card-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-img-container {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f8fafc;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-img img {
+            width: 92%;
+            height: 92%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .title {
+            font-size: 14px;
+            color: #2563eb;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .company {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .bio {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 14px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .link-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .link-btn .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .link-btn i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .link-btn .fa-whatsapp { color: #22c55e; }
+        .link-btn .fa-globe { color: #0284c7; }
+
+        .save-contact-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .save-contact-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 24px;
+            font-size: 11px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <!-- Logo / Foto Profil -->
+        <div class="profile-img-container">
+            <div class="profile-img">
+                <!-- Mengambil gambar langsung dari tautan Google Drive Anda -->
+                <img src="https://lh3.googleusercontent.com/d/1c45MLo_8VGptYWpDnYVajyC-cBfQOkNY" alt="Logo ORCA">
+            </div>
+        </div>
+
+        <!-- Informasi Utama -->
+        <h1 class="name">Felmi Firmansyah Saputra</h1>
+        <div class="title">Sales Manager Orca Pump</div>
+        <div class="company">PT Orca Pasifik Indonesia</div>
+        
+        <p class="bio">
+            <i class="fa-solid fa-screwdriver-wrench" style="color: #2563eb; margin-right: 6px;"></i> 
+            Spesialis & System Solusi Pump
+        </p>
+
+        <!-- Daftar Tautan Interaktif -->
+        <div class="links-container">
+            <a href="https://wa.me/6282315171200" target="_blank" class="link-btn">
+                <div class="left">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>+62 823-1517-1200</span>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #94a3b8;"></i>
+            </a>
+
+            <a href="https://orcapasifikindonesia.com/" target="_blank" class="link-btn">
+                <div class="left">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>orcapasifikindonesia.com</span>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #94a3b8;"></i>
+            </a>
+        </div>
+
+        <!-- Tombol Simpan Kontak (vCard otomatis) -->
+        <a href="#" id="download-vcard" class="save-contact-btn">
+            <i class="fa-solid fa-address-book"></i> Simpan Kontak
+        </a>
+
+        <div class="footer">
+            ORCA PUMP DIGITAL CARD
+        </div>
+    </div>
+
+    <script>
+        // Script otomatis untuk mengunduh kontak (.vcf)
+        document.getElementById('download-vcard').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const vcardData = 
+`BEGIN:VCARD
+VERSION:3.0
+FN:Felmi Firmansyah Saputra
+TITLE:Sales Manager Orca Pump
+ORG:PT Orca Pasifik Indonesia
+NOTE:Spesialis & System Solusi Pump
+TEL:+6282315171200
+URL:https://orcapasifikindonesia.com/
+END:VCARD`;
+
+            const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Felmi_Firmansyah_Saputra.vcf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        });
+    </script>
+
+</body>
+</html>

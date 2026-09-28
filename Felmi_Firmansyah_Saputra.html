@@ -163,6 +163,7 @@
 
         .link-btn .fa-whatsapp { color: #22c55e; }
         .link-btn .fa-globe { color: #0284c7; }
+        .link-btn .fa-envelope { color: #e11d48; }
 
         .save-contact-btn {
             width: 100%;
@@ -205,7 +206,6 @@
         <!-- Logo / Foto Profil -->
         <div class="profile-img-container">
             <div class="profile-img">
-                <!-- Mengambil gambar langsung dari tautan Google Drive Anda -->
                 <img src="https://lh3.googleusercontent.com/d/1c45MLo_8VGptYWpDnYVajyC-cBfQOkNY" alt="Logo ORCA">
             </div>
         </div>
@@ -230,6 +230,14 @@
                 <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #94a3b8;"></i>
             </a>
 
+            <a href="mailto:info@orcapasifikindonesia.com" class="link-btn">
+                <div class="left">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>info@orcapasifikindonesia.com</span>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #94a3b8;"></i>
+            </a>
+
             <a href="https://orcapasifikindonesia.com/" target="_blank" class="link-btn">
                 <div class="left">
                     <i class="fa-solid fa-globe"></i>
@@ -250,7 +258,7 @@
     </div>
 
     <script>
-        // Script otomatis untuk mengunduh kontak (.vcf)
+        // Script otomatis untuk mengunduh kontak (.vcf) termasuk email
         document.getElementById('download-vcard').addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -262,6 +270,7 @@ TITLE:Sales Manager Orca Pump
 ORG:PT Orca Pasifik Indonesia
 NOTE:Spesialis & System Solusi Pump
 TEL:+6282315171200
+EMAIL:info@orcapasifikindonesia.com
 URL:https://orcapasifikindonesia.com/
 END:VCARD`;
 
